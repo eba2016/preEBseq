@@ -38,12 +38,13 @@ def __main__():
     # concatenate them horizontally
     df_final = reduce(lambda left, right: pd.merge(left, right, on=['gene_id','transcript_id']), dfs)
     # write it out
-    df_final.to_csv(outtable, index=None, sep="\t")
+    df_final_write = df_final.drop('gene_id', 1)
+    df_final_write.to_csv(outtable, index=None, sep="\t")
 
 
     #get IG vector from the Expression Table
     #The IG Vector is a table with only one column of numbers (integers)
-    df2 = pd.read_csv(outtable,  sep='\t', converters={0: str, 1: str})
+    df2 = df_final # pd.read_csv(outtable,  sep='\t', converters={0: str, 1: str})
     ids= df2[['transcript_id', 'gene_id']]
     counts = Counter(ids['gene_id'])
     gene_order = list(ids['gene_id'])
